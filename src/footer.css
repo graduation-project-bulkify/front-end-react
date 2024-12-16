@@ -1,0 +1,31 @@
+#footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: black;
+    color: aliceblue;
+}
+#links{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    margin-left: 20px;
+  }
+  #links li {
+    text-decoration: none;
+    margin-left: 20px;
+    list-style: none;
+    color: beige;
+  }
+  #links li a{
+    text-decoration: none;
+    margin-left: 20px;
+    list-style: none;
+    color: beige;
+  }
+  #links li a:hover {
+    font-size: 25px;
+    transition: font-size 0.9s ease;
+  }
+  

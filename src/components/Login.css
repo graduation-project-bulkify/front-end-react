@@ -1,0 +1,116 @@
+.form {
+    margin: 30px 0 30px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    /* Add box shadow */
+}
+.login-register{
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    padding: 30px;
+    margin: 30px;
+    justify-self: anchor-center;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+    width: 450px;
+}
+  
+body {
+    margin: 0px !important;
+    display: flex;
+    place-items: center;
+    min-width: 320px;
+    min-height: 90vh;
+  }
+  
+    
+    ::placeholder {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+    
+    .form button {
+    align-self: anchor-center;
+    width: 33%;
+    }
+    
+    .flex-column > label {
+    color: #151717;
+    font-weight: 600;
+    }
+    .flex-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+    }
+    
+    .flex-row > div > label {
+      font-size: 14px;
+      color: black;
+      font-weight: 400;
+    }
+    
+    .span {
+      font-size: 14px;
+      margin-left: 5px;
+      color: #2d79f3;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    
+    
+    .p {
+    text-align: center;
+    color: black;
+    font-size: 14px;
+    margin: 5px 0;
+    }
+    
+    
+
+   
+   .user-label {
+    position: absolute;
+    left: 15px;
+    color: red;
+    pointer-events: none;
+    transform: translateY(1rem);
+    transition: 150ms cubic-bezier(0.4,0,0.2,1);
+   }
+   
+   .input:focus, input:valid {
+    outline: none;
+   }
+   
+   .input:focus ~ .user-label, .input:valid ~ .user-label {
+        transform: translateY(-50%) scale(0.8);
+    padding: 0 .2em;
+    color: #2196f3;
+   }
+   .errMsg{
+    justify-self: anchor-center;
+
+   }
+   
+.tab-switch {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+.tab-switch a {
+    text-decoration: none;
+    font-weight: bold;
+    color: #888;
+    padding-bottom: 5px;
+}
+.tab-switch a.active {
+    color: black;
+    border-bottom: 3px solid orange;
+}

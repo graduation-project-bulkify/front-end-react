@@ -1,12 +1,14 @@
 import React, { useState , useRef } from "react";
-import "../forgetPass/ForgetPassword.css";
+import "../ForgetPass/ForgetPassword.css";  
+import SupLogin from "./SupLogin";
+import SupSignUp from "./SupSignUp";
 import axios from "axios";
-import ResetPass from "../OTP/ResetPass";
+import ResetPass from "./SupResetPass";
 
 const ForgetPass_URL = "https://bulkify-back-end.vercel.app/api/v1/suppliers/forgot-password";
 function SupForgetPassword() {
-  const [showLogin, setLogin] = useState(false);
-  const [showSignUp, setshowSignUp] = useState(false);
+  const [supLogin, setSupLogin] = useState(false);
+  const [supSignUp, setSupSignUp] = useState(false);
   const [showResetPass,setshowResetPass] =useState(false);
   const [email, setEmail] = useState("");
   const [errMsg, setErrMsg] = useState("");
@@ -36,11 +38,11 @@ function SupForgetPassword() {
       errRef.current.focus();
     }
   };
-  if (showLogin) {
-    return <Login />;
+  if (supLogin) {
+    return <SupLogin />;
   }
-  if (showSignUp) {
-    return <SignUp />;
+  if (supSignUp) {
+    return <SupSignUp />;
   }
   if(showResetPass === true){
     return <ResetPass />
@@ -94,7 +96,7 @@ function SupForgetPassword() {
           <div className="siginingLinks">
             <p className="signup-link">
               Don't have account?
-              <a href="#" className="signup-link link" onClick={() => setshowSignUp(true)}
+              <a href="#" className="signup-link link" onClick={() => setSupSignUp(true)}
               style={{ cursor: "pointer" }}>
                 {" "}
                 Sign up now
@@ -102,7 +104,7 @@ function SupForgetPassword() {
             </p>
             <p className="signup-link">
               Already have account?
-              <a href="#" className="signup-link link"   onClick={() => setLogin(true)}
+              <a href="#" className="signup-link link"   onClick={() => setSupLogin(true)}
               style={{ cursor: "pointer" }}>
                 {" "}
                 Sign in now

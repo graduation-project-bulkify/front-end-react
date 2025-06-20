@@ -1,0 +1,149 @@
+.contanier {
+  width: 100%;
+  margin: auto;
+  color: #929FA5;
+  font-family: "Public Sans", serif;
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  flex-direction: row;
+  text-align: center;
+}
+
+.clear-fix {
+  clear: both;
+}
+
+/*footer*/
+
+.footer {
+  width: 100%;
+  padding: 25px 0;
+  background-color: #191C1F;
+  min-height: 300px;
+  overflow: hidden;
+}
+
+.footer .contanier {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: space-between;
+}
+
+.footer .item {
+  float: left;
+  flex: 1;
+  min-width: 200px;
+}
+
+.footer .item img {
+  width: 140px;
+  height: 62px;
+}
+
+.footer .item h4 {
+  margin: 0;
+}
+.footer-contanier{
+      display: flex
+;
+    margin: 25px;
+    text-align: center;
+    justify-content: space-evenly;
+    flex: auto;
+    flex-wrap: wrap;
+}
+.footer .item button {
+  background-color: #303639;
+  display: block;
+  width: 176px;
+  height: 69px;
+  margin-bottom: 10px;
+  padding: 10px;
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  border: none;
+  border-radius: 5px;
+  margin-left: 10px;
+
+}
+
+.footer .item button img {
+  width: 20px;
+  height: 20px;
+}
+
+.footer .item h3 {
+  color: #FFFFFF;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 30px;
+  width: 100%;
+}
+
+.footer .item p {
+  color: #ADB7BC;
+}
+
+.footer .item a {
+  text-decoration: none;
+  color: #FFFFFF;
+}
+
+.footer .item ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.footer .item ul li {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 30px;
+  margin-bottom: 0.5rem;
+  margin-bottom: 10px;
+  break-inside: avoid-column;
+}
+.footer .item ul li a {
+    color: #666;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer .item ul li a:hover {
+    color: #198754;
+}
+ul{
+  list-style-type: none; /* Removes the bullet points */
+  padding-left: 0;  
+}
+/* For tablets */
+@media (max-width: 768px) {
+  
+  .item3{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .footer .item {
+    float: left;
+    width: 100%;
+    list-style-type: none; /* Removes the bullet points */
+    padding-left: 0;  
+  }
+  .footer .item {
+        flex: 1 1 100%;
+    }
+}
+
+/* For mobile devices */
+@media (max-width: 480px) {
+  
+  
+  
+}

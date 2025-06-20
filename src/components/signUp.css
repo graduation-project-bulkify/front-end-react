@@ -11,21 +11,58 @@ body {
     justify-self: anchor-center;
     border-radius: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
-    width: 450px;
+    width: 100%;
+    max-width: 600px; /* Set a max width for larger screens */
+    box-sizing: border-box; /* Ensure padding and border are included in width calculations */
 }
-.tab-switch {
+.result{
+    width: 100%;
+    font-size: larger;
+}
+.custom-radio{
+justify-content: space-between;
+}
+/* Hide the default radio button */
+.custom-radio input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none; /* for Safari */
+    position: relative;
+    width: 15px;
+    height: 15px;
+    background-color: #f1f1f1; /* Default background color */
+    border-radius: 50%; /* Make it round */
+    border: 2px solid #ccc; /* Border color */
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+    margin-left: 15px;
+  }
+  
+  /* Style for the selected radio button */
+  .custom-radio input[type="radio"]:checked {
+    background-color: #4CAF50; /* Background color when selected */
+    border-color: #4CAF50; /* Border color when selected */
+  }
+  
+  /* Add a dot inside the radio button when selected */
+  .custom-radio input[type="radio"]:checked::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background-color: #61AE45; /* Dot color */
+    border-radius: 50%;
+  }
+  
+  /* Add some spacing between the radio button and label text */
+  .custom-radio {
     display: flex;
-    justify-content: space-between;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 10px;
-}
-.tab-switch a {
-    text-decoration: none;
-    font-weight: bold;
-    color: #888;
-    padding-bottom: 5px;
-}
-.tab-switch a.active {
-    color: black;
-    border-bottom: 3px solid orange;
-}
+    align-items: center;
+    gap: 10px;
+  }
+  .leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+    z-index: 0 !important;
+  } 

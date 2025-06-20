@@ -1,50 +1,61 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useRef } from 'react'
-import "../SignUp.css"
-import Login from '../Login';
+import "../signUp.css"
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 const OTP_URL ="https://bulkify-back-end.vercel.app/api/v1/customers/reset-password";
+const SuppOTP_URL ="https://bulkify-back-end.vercel.app/api/v1/suppliers/reset-password";
+
 export default function ResetPass() {
-  const [showLogin,setShowLogin] = useState(false);
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [otp, setOTP] = useState('');
   const [success, setSuccess] = useState(false);
   const [errMsg, setErrMsg] = useState('');
   const errRef = useRef(null);
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
     const payload = {
       email,
       newPassword,
       otp
     };
-    console.log(payload); // Log the payload to verify the data
   
+    console.log(payload);
+  
+    // Try Customer OTP reset
     try {
       const response = await axios.post(OTP_URL, payload);
       console.log(response?.data);
-      alert("Password Reset Succesfuly")
+      alert("Password Reset Successfully");
       setSuccess(true);
-      setShowLogin(true);
+      navigate("/login");
+      return;
     } catch (err) {
-        if (!err?.response) {
-          setErrMsg("No Server Response");
-        } else if (err.response?.status === 409) {
-          setErrMsg("Username Taken");
-        } else {
-          alert("Error response: ", err.response.data);  // Log the detailed error
-          setErrMsg(`Registration Failed: ${err.response?.data?.message || "Unknown error"}`);
-        }
-      
-        // Ensure the error message field is focused if it exists
-        if (errRef.current) {
-          errRef.current.focus();
-        }
+      if (!err?.response || err.response?.status !== 404) {
+        console.error("Error response: ", err.response?.data);
+        setErrMsg(err.response?.data?.message || "Password reset failed.");
+        if (errRef.current) errRef.current.focus();
+        return;
       }
-      
+    }
+  
+    // Try Supplier OTP reset
+    try {
+      const response = await axios.post(SuppOTP_URL, payload);
+      console.log(response?.data);
+      alert("Password Reset Successfully");
+      setSuccess(true);
+      navigate("/login");
+    } catch (err) {
+      console.error("Error response: ", err.response?.data);
+      setErrMsg(err.response?.data?.message || "Password reset failed.");
+      if (errRef.current) errRef.current.focus();
+    }
   };
+  
   if (success) {
     return <SupLogin />;
   }

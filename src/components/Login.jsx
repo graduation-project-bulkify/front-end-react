@@ -1,25 +1,25 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import "./Login";
-import SupLogin from "../components/Supplier/supLogin.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
 import AuthContext from "./context/AuthProvider";
 import axios from "axios";
-
+import Alert from "./Alert.jsx";
 const Login_URL = "https://bulkify-back-end.vercel.app/api/v1/customers/login";
-
+const suppLogin_URL = "https://bulkify-back-end.vercel.app/api/v1/suppliers/login";
+const AdminLogin_URL = "https://bulkify-back-end.vercel.app/api/v1/admins/login";
 export default function Login() {
   const { setAuth } = useContext(AuthContext);
   const userRef = useRef();
   const errRef = useRef();
-  const navigate = useNavigate();
-  const [supLogin, setSupLogin] = useState(false);
-  
+  const navigate = useNavigate(); // Initialize useNavigate at the top level
+
   const [email, setUser] = useState("");
   const [password, setPwd] = useState("");
   const [errMsg, setErrMsg] = useState("");
-  const [success, setSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
 
   useEffect(() => {
     userRef.current.focus();
@@ -31,128 +31,151 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setErrMsg("");
+  
     try {
-      const response = await axios.post(
+      // Try customer login first
+      const customerResponse = await axios.post(
         Login_URL,
         { email, password },
         { headers: { "Content-Type": "application/json" } }
       );
-
-      const token = response?.data?.token;
-      const roles = response?.data?.roles;
-      setAuth({ email, password, roles, token });
-
-      setUser(""); // Clear the email field
-      setPwd("");  // Clear the password field
-      setSuccess(true); // Indicate success
-      navigate("/"); // Redirect to homepage or desired route
-
-    } catch (err) {
-      if (err.response) {
-        if (err.response.status === 400) {
-          setErrMsg("Invalid credentials");
-        } else if (err.response.status === 401) {
-          setErrMsg("Unauthorized");
-        } else {
-          setErrMsg(err.response.data?.message || "An error occurred");
-        }
-      } else if (err.request) {
-        setErrMsg("Network Error");
-      } else {
-        setErrMsg("An error occurred");
+  
+      const token = customerResponse?.data?.token;
+      const customer = customerResponse?.data?.customer;
+  
+      setAuth({ email, token });
+      localStorage.setItem("Customer", JSON.stringify(customer));
+      localStorage.setItem("CustomerToken", token);
+      navigate("/");
+      return;
+    } catch (customerErr) {
+      // Updated error handling for customer login
+      const errorMessage = customerErr.response?.data?.message || "Customer login failed";
+      setErrMsg(errorMessage);
+      if (customerErr.response?.status !== 401) {
+        return;
       }
-      errRef.current.focus(); // Focus the error message
+    }
+  
+    try {
+      // Try supplier login if customer login failed
+      const supplierResponse = await axios.post(
+        suppLogin_URL,
+        { email, password },
+        { headers: { "Content-Type": "application/json" } }
+      );
+  
+      const token = supplierResponse?.data?.token;
+      const supplier = supplierResponse?.data?.supplier;
+      const roles = supplierResponse?.data?.roles;
+  
+      setAuth({ email, token, roles });
+      localStorage.setItem("supplier", JSON.stringify(supplier));
+      localStorage.setItem("SupplierToken", token);
+      navigate("/SuppDashboard");
+      return;
+    } catch (supplierErr) {
+      // Updated error handling for supplier login
+      const errorMessage = supplierErr.response?.data?.message || "Supplier login failed";
+      setErrMsg(errorMessage);
+      if (supplierErr.response?.status !== 401) {
+        return;
+      }
+    }
+
+    try {
+      // Try admin login if both customer and supplier login failed
+      const adminResponse = await axios.post(
+        AdminLogin_URL,
+        { email, password },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      const token = adminResponse?.data?.token;
+      const admin = adminResponse?.data?.admin;
+      const roles = adminResponse?.data?.roles;
+
+      setAuth({ email, token, roles });
+      localStorage.setItem("admin", JSON.stringify(admin));
+      localStorage.setItem("AdminToken", token);
+      navigate("/AdminDashboard");
+      return;
+    } catch (adminErr) {
+      // Updated error handling for admin login
+      const errorMessage = adminErr.response?.data?.message || "Invalid credentials";
+      setErrMsg(errorMessage);
+      errRef.current?.scrollIntoView({ behavior: "smooth" });
+      errRef.current?.focus();
     }
   };
-
-  if(supLogin) {
-    return <SupLogin />;
-  }
+  
   return (
     <>
-      {success ? (
-        <section>
-          <h1>Congratulations {email}, You're logged in!</h1>
-          <br />
-          <p>
-            <Link to="/">Go to Home</Link>
-          </p>
-        </section>
-      ) : (
-        <>
-          <p
-            ref={errRef}
-            className={errMsg ? "errMsg" : "offScreen"}
-            aria-live="assertive"
-          >
-            {errMsg}
-          </p>
-          <div className="login-register">
-            <form className="form" onSubmit={handleSubmit}>
-              <div className="flex-column">
-                <label>Email </label>
-              </div>
-              <div className="input-group">
-                <input
-                  type="email"
-                  className="input form-control"
-                  placeholder="Enter your Email"
-                  ref={userRef}
-                  value={email}
-                  onChange={(e) => setUser(e.target.value)}
-                />
-                <br />
-              </div>
-              <div className="flex-column">
-                <label>Password </label>
-              </div>
-              <div className="inputForm">
-                <input
-                  type="password"
-                  className="input form-control"
-                  value={password}
-                  onChange={(e) => setPwd(e.target.value)}
-                  placeholder="Enter your Password"
-                />
-              </div>
-              <div className="flex-row">
-                <div>
-                  <input type="checkbox" />
-                  <label>Remember me </label>
-                </div>
-                <span
-                  className="span"
-                  style={{ cursor: "pointer" }}
-                >
-                  <Link to="/ForgetPassword">Forget Password</Link>
-                </span>
-              </div>
-
-              <button className="btn btn-success w-100 mt-4" type="submit">
-                Sign In
-              </button>
-            </form>
-
-            <div className="or-text">OR</div>
-
-            <span className="btn btn-success w-100 mt-4"
-              onClick={() => setSupLogin(true)}
+      <div className="login-register">
+        <Alert ref={errRef} errMsg={errMsg} setErrMsg={setErrMsg} />
+        <form className="form" onSubmit={handleSubmit}>
+          <div className="flex-column">
+            <label>Email </label>
+          </div>
+          <div className="input-group">
+            <input
+              type="email"
+              className="input form-control"
+              placeholder="Enter your Email"
+              ref={userRef}
+              value={email}
+              onChange={(e) => setUser(e.target.value)}
+              required
+            />
+            <br />
+          </div>
+          <div className="flex-column">
+            <label>Password </label>
+          </div>
+          <div className="d-flex input-group" >
+            <input
+              type={showPassword ? "text" : "password"} // Toggle between text and password
+              className="input form-control"
+              value={password}
+              onChange={(e) => setPwd(e.target.value)}
+              placeholder="Enter your Password"
+              required
+            />
+            <span
+              className="input-group-text"
+              onClick={() => setShowPassword(!showPassword)} // Toggle visibility
               style={{ cursor: "pointer" }}
             >
-              Sign in As Supplier
+              {showPassword ? "🙈" : "👀"} {/* Icons for visibility toggle */}
             </span>
-
-            <br />
-            <br />
-
-            <p>
-              Don't have an account?{" "}
-              <Link to="/Signup">Sign up now</Link>
-            </p>
           </div>
-        </>
-      )}
+          <div className="flex-row">
+            <a href="/Forget-Password"
+              className="span"
+              style={{ cursor: "pointer" }}
+            // onClick={() => setForgetPassword(true)}
+            >
+              Forget Password ?
+            </a>
+          </div>
+
+          <button className="btn btn-success w-100 mt-4" type="submit">
+            Sign In
+          </button>
+        </form>   
+
+        <br />
+        <p>
+          Don't have an account?{" "}
+          <a href="/Signup">Sign up now</a><br />
+          <a href="/SupSignUp">Sign up now as Supplier</a>
+        </p>
+      </div>
+
+
     </>
+
+
   );
 }

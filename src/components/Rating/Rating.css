@@ -1,0 +1,19 @@
+.rating-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.stars {
+    display: flex;
+    align-items: center;
+}
+
+.star {
+    transition: color 200ms;
+}
+
+.star:hover {
+    transform: scale(1.1);
+}

@@ -1,0 +1,30 @@
+.custom-product-card-content {
+  display: flex;
+  align-items: center;
+}
+.custom-product-card-details {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (max-width: 1300px) {
+  .custom-product-card-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .custom-product-card-image,
+  .custom-product-card-details {
+    width: 100%;
+  }
+  .custom-product-card-image {
+    margin-bottom: 12px;
+  }
+  .custom-product-card{
+    height: min-content !important;
+  }
+  .mainContainer{
+    align-items: center;
+  }
+}

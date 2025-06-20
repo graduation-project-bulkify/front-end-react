@@ -1,0 +1,6 @@
+.product-info >h5{
+        display: -webkit-box;
+    -webkit-line-clamp: 1 !important;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}

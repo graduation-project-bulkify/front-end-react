@@ -45,25 +45,42 @@ const LocationPicker = ({ setValue1, setValue2 }) => {
     }
   };
 
-  const handleLocationSelect = (location) => {
-    setSelectedLocation(location);
-    // Set the latitude and longitude using setValue1 and setValue2 if they are valid functions
-    if (typeof setValue1 === 'function' && typeof setValue2 === 'function') {
-      setValue1(location.lat);
-      setValue2(location.lng);
-    } else {
-      console.error('setValue1 or setValue2 is not a function');
+
+  const handleMapClick = async (location) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.lat}&lon=${location.lng}`
+      );
+      const data = await response.json();
+      setSelectedLocation(location);
+      setSearchQuery(data.display_name);
+      
+      if (typeof setValue1 === 'function' && typeof setValue2 === 'function') {
+        setValue1(location.lat);
+        setValue2(location.lng);
+      }
+    } catch (error) {
+      console.error('Error getting location name:', error);
     }
   };
 
   const handleSearchResultClick = (result) => {
     const location = {
-      lat: parseFloat(result.lat.toFixed(6)),
-      lng: parseFloat(result.lon.toFixed(6)),
+      lat: parseFloat(result.lat),
+      lng: parseFloat(result.lon),
     };
-    handleLocationSelect(location); // Update selected location and pass lat/lng to parent
-    setSearchResults([]);
+    setSelectedLocation(location);
     setSearchQuery(result.display_name);
+    setSearchResults([]);
+    
+    if (mapRef.current) {
+      mapRef.current.setView(location, 13);
+    }
+
+    if (typeof setValue1 === 'function' && typeof setValue2 === 'function') {
+      setValue1(location.lat);
+      setValue2(location.lng);
+    }
   };
 
   useEffect(() => {
@@ -81,13 +98,13 @@ const LocationPicker = ({ setValue1, setValue2 }) => {
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="mb-4">
-        <div className="relative">
+        <div className="d-flex align-items-center">
           <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
           <input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search for a location"
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="form-control"
           />
         </div>
         {searchResults.length > 0 && (
@@ -99,7 +116,7 @@ const LocationPicker = ({ setValue1, setValue2 }) => {
                 className="p-2 hover:bg-gray-100 cursor-pointer flex items-center"
               >
                 <MapPin className="h-5 w-5 mr-2 text-gray-500" />
-                <span>{result.display_name}</span>
+                <span className="result" >{result.display_name}</span>
               </div>
             ))}
           </div>
@@ -117,10 +134,10 @@ const LocationPicker = ({ setValue1, setValue2 }) => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          <MapEvents onLocationSelect={handleLocationSelect} />
+          <MapEvents onLocationSelect={handleMapClick} />
           {selectedLocation && (
             <Marker
-              position={new LatLng(selectedLocation.lat.toFixed(6), selectedLocation.lng.toFixed(6))}
+              position={new LatLng(selectedLocation.lat, selectedLocation.lng)}
               icon={customIcon}
             />
           )}
@@ -128,7 +145,7 @@ const LocationPicker = ({ setValue1, setValue2 }) => {
       </div>
 
       {selectedLocation && (
-        <div className="mt-4 p-4 bg-white rounded-lg shadow">
+        <div className="mt-4 p-4 bg-white rounded-lg shadow location-details">
           <h3 className="text-lg font-semibold mb-2">Selected Location:</h3>
           <p className="text-gray-700">Latitude: {selectedLocation.lat.toFixed(6)}</p>
           <p className="text-gray-700">Longitude: {selectedLocation.lng.toFixed(6)}</p>

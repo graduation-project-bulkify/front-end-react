@@ -1,0 +1,16 @@
+.status-pending { color: #ffa500; }
+.status-purchased { color: #28a745; }
+.status-cancelled { color: #dc3545; }
+.status-arrived { color: #17a2b8; }
+
+.table {
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.table th {
+    background-color: #f8f9fa;
+}
+.content{
+    min-height: 100vh;
+}
